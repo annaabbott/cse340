@@ -16,7 +16,7 @@ Util.getNav = async function (req, res, next) {
       row.classification_id +
       '" title="See our inventory of ' +
       row.classification_name +
-      'vehicles"> ' +
+      ' vehicles"> ' +
       row.classification_name +
       "</a>";
     list += "</li>";
@@ -37,12 +37,12 @@ Util.buildClassificationGrid = async function (data) {
       grid +=
         '<a href="../../inv/detail/' +
         vehicle.inv_id +
-        '"title="View ' +
-        vehicle.inv_thumbnail +
-        'details"><img src="' +
+        '" title="View ' +
         vehicle.inv_make +
         " " +
         vehicle.inv_model +
+        'details"><img src="' +
+        vehicle.inv_thumbnail +
         '" alt="Image of ' +
         vehicle.inv_make +
         " " +
@@ -52,31 +52,29 @@ Util.buildClassificationGrid = async function (data) {
       grid += "<hr />";
       grid += "<h2>";
       grid +=
-        '<a href="../../inv/detail>' +
+        '<a href="../../inv/detail/' +
         vehicle.inv_id +
         '" title="View ' +
         vehicle.inv_make +
         " " +
         vehicle.inv_model +
-        'details">' +
+        ' details">' +
         vehicle.inv_make +
         " " +
         vehicle.inv_model +
-        "<a>";
-      grid += "<h2>";
+        "</a>";
+      grid += "</h2>";
       grid +=
         "<span>$" +
         new Intl.NumberFormat("en-US").format(vehicle.inv_price) +
-        "<span>";
+        "</span>";
       grid += "</div>";
       grid += "</li>";
     });
     grid += "</ul>";
   } else {
-    grid +=
-      '<p class="notice"> Sorry, no matching vehicles could be found.</p>';
+    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>';
   }
   return grid;
 };
-
 module.exports = Util;

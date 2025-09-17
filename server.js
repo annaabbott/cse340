@@ -30,7 +30,6 @@ app.get("/", baseController.buildHome);
 
 //inventory routes
 app.use("/inv", inventoryRoute);
-
 /* ***********************
  * Local Server Information
  * Values from .env (environment) file
