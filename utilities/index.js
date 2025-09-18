@@ -77,4 +77,30 @@ Util.buildClassificationGrid = async function (data) {
   }
   return grid;
 };
+
+/* ****************************************
+ * Middleware For Handling Errors
+ * Wrap other function in this for
+ * General Error Handling
+ **************************************** */
+Util.handleErrors = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
+
 module.exports = Util;
+
+// const add = a => b => a + b;
+
+// // function multiply(x) {
+// //   return function (y) {
+// //     return x * y;
+// //   }
+// // }
+
+// function multiply(x) {
+//   return y => x * y;
+// }
+
+// const multiplyBy2 = multiply(2);
+// const multiplyBy100 = multiply(100);
+
+// console.log(multiplyBy2(5)); // Outputs: 10
