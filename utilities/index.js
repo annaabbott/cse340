@@ -78,6 +78,27 @@ Util.buildClassificationGrid = async function (data) {
   return grid;
 };
 
+Util.buildDetailView = async function (data) {
+  let miles = data.inv_miles;
+  let formattedMiles = new Intl.NumberFormat("en-US").format(miles);
+  // TODO:
+  return `<div class="detailViewContainer">
+  <img class="detailsImg" src="${data.inv_img}" alt="Image of ${
+    data.inv_make
+  } ${data.inv_model}"/>
+  <div class="detailInfoContainer">
+  <h2>${data.inv_year} ${data.inv_make} ${data.inv_model}</h2>
+  <p><span class="bold">Price: </span> $${new Intl.NumberFormat("en-US").format(
+    data.inv_price
+  )}</p>
+  <p><span class="bold">Description: </span> ${data.inv_description}</p>
+  <p><span class="bold">Color: </span> ${data.inv_color}</p>
+  <p><span class="bold">Miles: </span> ${formattedMiles} </p>
+  </div>
+  </div>`;
+  // <pre>${JSON.stringify(data, undefined, 2)}</pre>;
+};
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for

@@ -19,4 +19,18 @@ invCont.buildByClassificationId = async function (req, res, next) {
   });
 };
 
+invCont.buildByInvId = async function (req, res, next) {
+  const product_id = req.params.productId;
+  const data = await invModel.getInventoryByInvId(product_id); // 👈👈👈
+  const content = await utilities.buildDetailView(data);
+  let nav = await utilities.getNav();
+  //const className = data[0].classification_name;
+  const vehicleMakeModel = `${data.inv_make} ${data.inv_model}`;
+  res.render("./inventory/detail", {
+    title: vehicleMakeModel,
+    nav,
+    content,
+  });
+};
+
 module.exports = invCont;

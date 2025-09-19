@@ -31,13 +31,16 @@
 a {
   color: var(--text-color);
   text-decoration: none;
+  color: white;
+  font-weight: bold;
 }
 
 nav {
   background-color: var(--secondary-color);
-  color: var(--second-text-color);
+  color: #fff;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  width: 100%;
 }
 
 nav ul {
@@ -94,6 +97,17 @@ div #imgDescription button {
   place-self: center;
 }
 
+.bold {
+  font-weight: bold;
+}
+
+.detailsImg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
 /***************layout for large screen****************/
 
 @media screen and (min-width: 38rem) {
@@ -134,5 +148,18 @@ div #imgDescription button {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "reviewSection upgradesSection";
+  }
+
+  .detailViewContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .detailsImg {
+    max-width: 50%;
+  }
+
+  .detailInfoContainer {
+    padding-left: 1rem;
   }
 }
