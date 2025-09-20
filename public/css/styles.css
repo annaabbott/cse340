@@ -97,6 +97,10 @@ div #imgDescription button {
   place-self: center;
 }
 
+footer a {
+  color: var(--text-color);
+}
+
 .bold {
   font-weight: bold;
 }

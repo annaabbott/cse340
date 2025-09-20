@@ -33,4 +33,8 @@ invCont.buildByInvId = async function (req, res, next) {
   });
 };
 
+invCont.foobar = function (req, res, next) {
+  throw new Error("FooBar Error");
+};
+
 module.exports = invCont;
