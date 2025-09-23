@@ -7,7 +7,7 @@ const Util = {};
 
 Util.getNav = async function (req, res, next) {
   let data = await invModel.getClassifications();
-  let list = "<ul>";
+  let list = "<ul class='navList'>";
   list += '<li><a href="/" title="Home page">Home</a></li>';
   data.rows.forEach((row) => {
     list += "<li>";
@@ -107,21 +107,19 @@ Util.buildDetailView = async function (data) {
 Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
+Util.buildLoginForm = () => {
+  return `<form class="loginForm" method="POST" action="/account/login">
+  <label for="accountEmail">Email</label>
+  <input type="email" id="accountEmail" name="accountEmail" required />
+  <label for="accountPassword">Password</label>
+  <input type="password" id="accountPassword" name="accountPassword" required />
+  <button type="submit" id="loginBtn" name="loginBtn">LOGIN</button>
+  <p>No account? <a href="/account/registration">Sign up</a></p>
+  </form>`;
+};
+
+Util.buildRegistrationForm = () => {
+  return `<div>Hello from registration form</div>`;
+};
+
 module.exports = Util;
-
-// const add = a => b => a + b;
-
-// // function multiply(x) {
-// //   return function (y) {
-// //     return x * y;
-// //   }
-// // }
-
-// function multiply(x) {
-//   return y => x * y;
-// }
-
-// const multiplyBy2 = multiply(2);
-// const multiplyBy100 = multiply(100);
-
-// console.log(multiplyBy2(5)); // Outputs: 10
