@@ -109,17 +109,29 @@ Util.handleErrors = (fn) => (req, res, next) =>
 
 Util.buildLoginForm = () => {
   return `<form class="loginForm" method="POST" action="/account/login">
-  <label for="accountEmail">Email</label>
-  <input type="email" id="accountEmail" name="accountEmail" required />
-  <label for="accountPassword">Password</label>
-  <input type="password" id="accountPassword" name="accountPassword" required />
+  <label for="account_email">Email</label>
+  <input type="email" id="account_email" name="account_email" required />
+  <label for="ccount_password">Password</label>
+  <input type="password" id="account_password" name="account_password" required />
   <button type="submit" id="loginBtn" name="loginBtn">LOGIN</button>
   <p>No account? <a href="/account/registration">Sign up</a></p>
   </form>`;
 };
 
 Util.buildRegistrationForm = () => {
-  return `<div>Hello from registration form</div>`;
+  return `<form class="registrationForm" method="POST" action="/account/register">
+  <label for="account_firstname">First Name</label>
+  <input type="text" id="account_firstname" name="account_firstname" required />
+  <label for="account_lastname">Last Name</label>
+  <input type="text" id="account_lastname" name="account_lastname" required />
+  <label for="account_email">Email</label>
+  <input type="email" id="account_email" name="account_email" required />
+  <label for="account_password">Password</label>
+  <input type="password" id="account_password" name="account_password" required />
+  <p class="password-requirements">Passwords must be at least 12 characters and contain at least 1 capital letter, at least 1 number, and at least 1 special character</p>
+  <button type="submit" id="regBtn" name="regBtn">REGISTER</button>
+
+  </form>`;
 };
 
 module.exports = Util;
