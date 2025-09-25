@@ -112,7 +112,8 @@ Util.buildLoginForm = () => {
   <label for="account_email">Email</label>
   <input type="email" id="account_email" name="account_email" required />
   <label for="ccount_password">Password</label>
-  <input type="password" id="account_password" name="account_password" required />
+  <input type="password" id="account_password" name="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required />
+  <p class="password-requirements">Passwords must be at least 12 characters and contain at least 1 capital letter, at least 1 number, and at least 1 special character</p>
   <button type="submit" id="loginBtn" name="loginBtn">LOGIN</button>
   <p>No account? <a href="/account/registration">Sign up</a></p>
   </form>`;
@@ -127,8 +128,9 @@ Util.buildRegistrationForm = () => {
   <label for="account_email">Email</label>
   <input type="email" id="account_email" name="account_email" required />
   <label for="account_password">Password</label>
-  <input type="password" id="account_password" name="account_password" required />
   <p class="password-requirements">Passwords must be at least 12 characters and contain at least 1 capital letter, at least 1 number, and at least 1 special character</p>
+  <input type="password" id="account_password" name="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required />
+
   <button type="submit" id="regBtn" name="regBtn">REGISTER</button>
 
   </form>`;

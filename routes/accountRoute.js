@@ -4,9 +4,7 @@ const router = new express.Router();
 const invController = require("../utilities/index");
 const accountController = require("../controllers/accountController");
 const utilities = require("../utilities");
-// Route for inventory by classification view
-// router.get("/type/:classificationId", invController.buildByClassificationId);
-// router.get("/detail/:productId", invController.buildByInvId);
+const regValidate = require("../utilities/account-validation.js");
 
 //Route for 'my account' view
 router.get("/login", utilities.handleErrors(accountController.buildLogin));
@@ -16,6 +14,8 @@ router.get(
 );
 router.post(
   "/register",
+  regValidate.registrationRules(),
+  regValidate.checkRegData,
   utilities.handleErrors(accountController.registerAccount)
 );
 
