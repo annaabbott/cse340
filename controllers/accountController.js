@@ -1,5 +1,6 @@
 const utilities = require("../utilities");
 const accountModel = require("../models/account-model");
+const bcrypt = require("bcryptjs");
 const accountController = {};
 
 /* ****************************************
@@ -16,9 +17,26 @@ async function buildLogin(req, res, next) {
   });
 }
 
+/* ****************************************
+ *  Deliver registration view
+ * *************************************** */
+
 async function buildRegistration(req, res, next) {
   let nav = await utilities.getNav();
-  const content = utilities.buildRegistrationForm();
+  const {
+    account_firstname = "",
+    account_lastname = "",
+    account_email = "",
+  } = req.body ?? {};
+
+  let content = utilities.buildRegistrationForm(
+    account_firstname,
+    account_lastname,
+    account_email
+  );
+
+  console.log("### Account Controller - buildRegistration");
+
   res.render("account/register", {
     title: "Register",
     nav,
@@ -31,6 +49,8 @@ async function buildRegistration(req, res, next) {
  *  Process Registration
  * *************************************** */
 async function registerAccount(req, res) {
+  console.log("### Account Controller - registerAccount");
+
   let nav = await utilities.getNav();
   const {
     account_firstname,
@@ -39,15 +59,44 @@ async function registerAccount(req, res) {
     account_password,
   } = req.body;
 
-  const content = utilities.buildRegistrationForm();
+  const registerContent = utilities.buildRegistrationForm(
+    account_firstname,
+    account_lastname,
+    account_email
+  );
+
+  let hashedPassword;
+  try {
+    //regular password and cost (salt is generated automatically)
+    hashedPassword = await bcrypt.hashSync(account_password, 10);
+  } catch (error) {
+    console.log("### Account Controller - error hashing password", error);
+
+    req.flash(
+      "notice",
+      "Sorry, there was an error processing the registration."
+    );
+
+    res.status(500).render("account/register", {
+      title: "Registration",
+      nav,
+      content: registerContent,
+      errors: null,
+    });
+    return;
+  }
 
   const regResult = await accountModel.registerAccount(
     account_firstname,
     account_lastname,
     account_email,
-    account_password
+    hashedPassword
   );
+
   if (regResult) {
+    console.log("### Account Controller - successful registration");
+
+    const loginContent = utilities.buildLoginForm();
     req.flash(
       "notice",
       `Congratulations, you're registered, ${account_firstname}. Please log in.`
@@ -55,14 +104,16 @@ async function registerAccount(req, res) {
     res.status(201).render("account/login", {
       title: "Login",
       nav,
-      content,
+      content: loginContent,
     });
   } else {
+    console.log("### Account Controller - registration failed");
+
     req.flash("notice", "Sorry, the registration failed.");
-    res.status(501).render("account/register", {
+    res.status(500).render("account/register", {
       title: "Registration",
       nav,
-      content,
+      content: registerContent,
       errors: null,
     });
   }

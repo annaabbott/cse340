@@ -1,5 +1,6 @@
 const utilities = require(".");
 const { body, validationResult } = require("express-validator");
+const accountModel = require("../models/account-model");
 const validate = {};
 
 /*  **********************************
@@ -7,6 +8,7 @@ const validate = {};
  * ********************************* */
 
 validate.registrationRules = () => {
+  console.log("### Account Validation - registrationRules");
   return [
     // First name is required and must be string
     body("account_firstname")
@@ -24,6 +26,88 @@ validate.registrationRules = () => {
       .withMessage("Please provide a last name."), //on error this message is sent
 
     //valid email address is required and cannot alread exist in the DB
+    body("account_email")
+      .trim()
+      .isEmail()
+      .normalizeEmail() // refer to validator.js docs
+      .withMessage("A valid email is required.")
+      .custom(async (account_email) => {
+        const emailExists = await accountModel.checkExistingEmail(
+          account_email
+        );
+        if (emailExists) {
+          throw new Error("Email exists. Please log in or use different email");
+        }
+      }),
+
+    // Password is required and must be strong password
+    body("account_password")
+      .trim()
+      .notEmpty()
+      .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+      .withMessage("Password does not meet requirements."),
+  ];
+};
+
+/* ******************************
+ * Check data and return errors or continue to registration
+ * ***************************** */
+
+validate.checkRegData = async (req, res, next) => {
+  console.log("### Account Validation - checkRegData");
+  const { account_firstname, account_lastname, account_email } = req.body;
+  let errors = [];
+  errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav();
+    let content = utilities.buildRegistrationForm(
+      account_firstname,
+      account_lastname,
+      account_email
+    );
+    res.render("account/register", {
+      errors,
+      title: "Registration",
+      nav,
+      content,
+    });
+    return;
+  }
+  next();
+};
+
+// valid email is required and cannot already exist in the database
+// body("account_email")
+//   .trim()
+//   .isEmail()
+//   .normalizeEmail()
+//   .custom(async (account_email) => {
+//     const emailExists = await accountModel.checkExistingEmail(account_email);
+//     if (emailExists) {
+//       throw new Error("Email exists. Please log in or use different email.");
+//     }
+//   });
+
+// body("account_email")
+//   .trim()
+//   .isEmail()
+//   .normalizeEmail()
+//   .custom(async (account_email) => {
+//     const emailExists = await accountModel.checkExistingEmail(account_email);
+//     if (emailExists) {
+//       throw new Error("Email exists. Please log in or use different email.");
+//     }
+//   });
+
+validate.loginRules = () => {
+  return [
+    //valid email address is required and cannot already exist in the DB
     body("account_email")
       .trim()
       .escape()
@@ -47,12 +131,8 @@ validate.registrationRules = () => {
   ];
 };
 
-/* ******************************
- * Check data and return errors or continue to registration
- * ***************************** */
-
-validate.checkRegData = async (req, res, next) => {
-  const { account_firstname, account_lastname, account_email } = req.body;
+validate.checkLoginData = async (req, res, next) => {
+  const { account_email } = req.body;
   let errors = [];
   errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -61,8 +141,6 @@ validate.checkRegData = async (req, res, next) => {
       errors,
       title: "Registration",
       nav,
-      account_firstname,
-      account_lastname,
       account_email,
     });
     return;

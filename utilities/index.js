@@ -110,29 +110,32 @@ Util.handleErrors = (fn) => (req, res, next) =>
 Util.buildLoginForm = () => {
   return `<form class="loginForm" method="POST" action="/account/login">
   <label for="account_email">Email</label>
-  <input type="email" id="account_email" name="account_email" required />
-  <label for="ccount_password">Password</label>
+  <input type="email" id="account_email" name="account_email" required value="<%= locals.account_firstname %>"/>
+  <label for="account_password">Password</label>
   <input type="password" id="account_password" name="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required />
   <p class="password-requirements">Passwords must be at least 12 characters and contain at least 1 capital letter, at least 1 number, and at least 1 special character</p>
   <button type="submit" id="loginBtn" name="loginBtn">LOGIN</button>
-  <p>No account? <a href="/account/registration">Sign up</a></p>
+  <p>No account? <a href="/account/register">Sign up</a></p>
   </form>`;
 };
 
-Util.buildRegistrationForm = () => {
+//Registration form
+Util.buildRegistrationForm = (
+  account_firstname,
+  account_lastname,
+  account_email
+) => {
   return `<form class="registrationForm" method="POST" action="/account/register">
   <label for="account_firstname">First Name</label>
-  <input type="text" id="account_firstname" name="account_firstname" required />
+  <input type="text" id="account_firstname" name="account_firstname" required value="${account_firstname}"/>
   <label for="account_lastname">Last Name</label>
-  <input type="text" id="account_lastname" name="account_lastname" required />
+  <input type="text" id="account_lastname" name="account_lastname" required value="${account_lastname}"/>
   <label for="account_email">Email</label>
-  <input type="email" id="account_email" name="account_email" required />
+  <input type="email" id="account_email" name="account_email" required value="${account_email}"/>
   <label for="account_password">Password</label>
   <p class="password-requirements">Passwords must be at least 12 characters and contain at least 1 capital letter, at least 1 number, and at least 1 special character</p>
   <input type="password" id="account_password" name="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required />
-
   <button type="submit" id="regBtn" name="regBtn">REGISTER</button>
-
   </form>`;
 };
 
