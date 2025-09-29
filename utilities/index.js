@@ -107,6 +107,16 @@ Util.buildDetailView = async function (data) {
 Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
+Util.handleErrors2 = function (fn) {
+  return async function (req, res, next) {
+    try {
+      await fn(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  };
+};
+
 Util.buildLoginForm = () => {
   return `<form class="loginForm" method="POST" action="/account/login">
   <label for="account_email">Email</label>
@@ -137,6 +147,90 @@ Util.buildRegistrationForm = (
   <input type="password" id="account_password" name="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required />
   <button type="submit" id="regBtn" name="regBtn">REGISTER</button>
   </form>`;
+};
+
+Util.buildManagement = () => {
+  return `
+    
+    <p>
+      <a 
+        href="/inv/add-classification" 
+        title="Add New Classification"
+      >
+        Add Classification
+      </a>
+    </p>
+    <p> 
+      <a 
+        href="/inv/add-inventory" 
+        title="Add Vehicle"
+      >
+        Add New Vehicle
+      </a>
+    </p>`;
+};
+
+Util.buildAddClassificationForm = () => {
+  return `
+    <div class="add-classification-form-container">
+    <p>Field is Required</p>
+    <form method="POST" action="/inv/add-classification">
+      <label for="classification_name">Classification Name</label>
+      <input type="text" id="classification_name" name="classification_name" required pattern="^[A-Za-z0-9]+$"/>
+      <p>Classification Name cannot contain a space or special character</p>
+      <button type="submit" id="addClassificationBtn" name="addClassificationBtn">ADD CLASSIFICATION</button>
+    </form>
+    </div>`;
+};
+
+Util.buildClassificationList = async function (classification_id = null) {
+  let data = await invModel.getClassifications();
+  let classificationList =
+    '<select name="classification_id" id="classificationList" required>';
+  classificationList += "<option value=''>Choose a Classification</option>";
+  data.rows.forEach((row) => {
+    classificationList += '<option value="' + row.classification_id + '"';
+    if (
+      classification_id != null &&
+      row.classification_id == classification_id
+    ) {
+      classificationList += " selected ";
+    }
+    classificationList += ">" + row.classification_name + "</option>";
+  });
+  classificationList += "</select>";
+  return classificationList;
+};
+
+Util.buildAddInventoryForm = async (classification_id) => {
+  const selectList = await Util.buildClassificationList(classification_id);
+  return `
+  <div class="add-inventory-form-container">
+  <p>All Fields are Required</p>
+  <form method="POST" action="/inv/add-inventory">
+    <label for="classification_name">Classification Name</label>
+    ${selectList}
+    <label for="inv_make">Make</label>
+    <input type="text" id="inv_make" name="inv_make" pattern=".{3,}" placeholder="Min of 3 characters" required />
+    <label for="inv_model">Model</label>
+    <input type="text" id="inv_model" name="inv_model" pattern=".{3,}" placeholder="Min of 3 characters" required />
+    <label for="inv_description">Description</label>
+    <textarea id="inv_description" name="inv_description" required></textarea>
+    <label for="inv_image">Image Path</label>
+    <input type="text" id="inv_image" name="inv_image" placeholder="/images/vehicles/no-image.png" pattern="^/images/[A-Za-z0-9/_-]+\.(png|jpg|jpeg|gif|webp)$" required />
+    <label for="inv_thumbnail">Thumbnail Path</label>
+    <input type="text" id="inv_thumbnail" name="inv_thumbnail" placeholder="/images/vehicles/no-image.png" pattern="^/images/[A-Za-z0-9/_-]+\.(png|jpg|jpeg|gif|webp)$" required />
+    <label for="inv_price">Price</label>
+    <input type="number" id="inv_price" name="inv_price" min="0" step="0.01" placeholder="Decimal or Integer" required />
+    <label for="inv_year">Year</label>
+    <input type="number" id="inv_year" name="inv_year" pattern="^\d{4}$" placeholder="4-digit year" required />
+    <label for="inv_miles">Miles</label>
+    <input type="number" id="inv_miles" name="inv_miles" placeholder="Digits only" required />
+    <label for="inv_color">Color</label>
+    <input type="text" id="inv_color" name="inv_color" required />
+    <button type="submit" id="addInventoryBtn" name="addInventoryBtn">ADD VEHICLE</button>
+  </form>
+  </div>`;
 };
 
 module.exports = Util;
