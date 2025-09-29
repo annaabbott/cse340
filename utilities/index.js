@@ -208,7 +208,7 @@ Util.buildAddInventoryForm = async (classification_id) => {
   <div class="add-inventory-form-container">
   <p>All Fields are Required</p>
   <form method="POST" action="/inv/add-inventory">
-    <label for="classification_name">Classification Name</label>
+    <label for="classification_id">Classification Name</label>
     ${selectList}
     <label for="inv_make">Make</label>
     <input type="text" id="inv_make" name="inv_make" pattern=".{3,}" placeholder="Min of 3 characters" required />
@@ -221,7 +221,7 @@ Util.buildAddInventoryForm = async (classification_id) => {
     <label for="inv_thumbnail">Thumbnail Path</label>
     <input type="text" id="inv_thumbnail" name="inv_thumbnail" placeholder="/images/vehicles/no-image.png" pattern="^/images/[A-Za-z0-9/_-]+\.(png|jpg|jpeg|gif|webp)$" required />
     <label for="inv_price">Price</label>
-    <input type="number" id="inv_price" name="inv_price" min="0" step="0.01" placeholder="Decimal or Integer" required />
+    <input type="text" id="inv_price" name="inv_price" min="0" step="0.01" placeholder="Decimal or Integer" required />
     <label for="inv_year">Year</label>
     <input type="number" id="inv_year" name="inv_year" pattern="^\d{4}$" placeholder="4-digit year" required />
     <label for="inv_miles">Miles</label>
