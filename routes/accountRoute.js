@@ -21,7 +21,21 @@ router.post(
 );
 
 // Process the login attempt
-router.post("/login", (req, res) => {
-  res.status(200).send("login process");
-});
+// router.post("/login", (req, res) => {
+//   res.status(200).send("login process");
+// });
+router.post(
+  "/login",
+  regValidate.loginRules(),
+  regValidate.checkLoginData,
+  utilities.handleErrors(accountController.accountLogin)
+);
+
+//default route upon login
+router.get(
+  "/",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildAccountManagement)
+);
+
 module.exports = router;

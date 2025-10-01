@@ -1,4 +1,6 @@
 const invModel = require("../models/inventory-model");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const Util = {};
 
 /* ************************
@@ -107,20 +109,12 @@ Util.buildDetailView = async function (data) {
 Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
-Util.handleErrors2 = function (fn) {
-  return async function (req, res, next) {
-    try {
-      await fn(req, res, next);
-    } catch (error) {
-      next(error);
-    }
-  };
-};
-
-Util.buildLoginForm = () => {
+Util.buildLoginForm = (account_firstname) => {
   return `<form class="loginForm" method="POST" action="/account/login">
   <label for="account_email">Email</label>
-  <input type="email" id="account_email" name="account_email" required value="<%= locals.account_firstname %>"/>
+  <input type="email" id="account_email" name="account_email" required value="${
+    account_firstname || ""
+  }"/>
   <label for="account_password">Password</label>
   <input type="password" id="account_password" name="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required />
   <p class="password-requirements">Passwords must be at least 12 characters and contain at least 1 capital letter, at least 1 number, and at least 1 special character</p>
@@ -231,6 +225,42 @@ Util.buildAddInventoryForm = async (classification_id) => {
     <button type="submit" id="addInventoryBtn" name="addInventoryBtn">ADD VEHICLE</button>
   </form>
   </div>`;
+};
+
+/* ****************************************
+ * Middleware to check token validity
+ **************************************** */
+Util.checkJWTToken = (req, res, next) => {
+  if (req.cookies.jwt) {
+    jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET,
+      function (err, accountData) {
+        if (err) {
+          req.flash("Please log in");
+          res.clearCookie("jwt");
+          return res.redirect("/account/login");
+        }
+        res.locals.accountData = accountData;
+        next();
+      }
+    );
+  } else {
+    next();
+  }
+};
+
+/* ****************************************
+ *  Check Login
+ * ************************************ */
+
+Util.checkLogin = (req, res, next) => {
+  if (res.locals.loggedin) {
+    next();
+  } else {
+    req.flash("notice", "Please log in");
+    return res.redirect("/account/login");
+  }
 };
 
 module.exports = Util;

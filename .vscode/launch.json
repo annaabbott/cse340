@@ -7,7 +7,7 @@
       "name": "Debug ExpressJS App",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/server.js",
-      "preLaunchTask": "run dev",
+      "console": "integratedTerminal",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }
   ]
