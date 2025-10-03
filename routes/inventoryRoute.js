@@ -44,4 +44,14 @@ router.post(
   utilities.handleErrors(managementController.addInventoryPostback)
 );
 
+router.get(
+  "/delete-inventory/:inv_id",
+  utilities.handleErrors(managementController.deleteInventory)
+);
+
+router.post(
+  "/delete-inventory",
+  utilities.handleErrors(managementController.deleteInventoryPostback)
+);
+
 module.exports = router;

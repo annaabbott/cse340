@@ -96,4 +96,59 @@ managementController.addInventoryPostback = async function (req, res) {
   });
 };
 
+managementController.deleteInventory = async function (req, res) {
+  let nav = await utilities.getNav();
+  let content = await utilities.buildDeleteInventoryForm();
+  res.render("./inventory/delete-inventory", {
+    title: "Delete Existing Vehicle From Inventory",
+    nav,
+    content,
+  });
+};
+
+managementController.deleteInventoryPostback = async function (req, res) {
+  const {
+    inv_id,
+    // classification_id,
+    // inv_make,
+    // inv_model,
+    // inv_description,
+    // inv_image,
+    // inv_thumbnail,
+    // inv_price,
+    // inv_year,
+    // inv_miles,
+    // inv_color,
+  } = req.body;
+  const success = await invModel.deleteInventory(
+    inv_id
+    // classification_id,
+    // inv_make,
+    // inv_model,
+    // inv_description,
+    // inv_image,
+    // inv_thumbnail,
+    // inv_price,
+    // inv_year,
+    // inv_miles,
+    // inv_color
+  );
+  if (success) {
+    req.flash("notice", `Vehicle has been deleted from the inventory.`);
+  } else {
+    req.flash(
+      "notice",
+      "Sorry, the vehicle was not deleted from the database. Please try again."
+    );
+  }
+
+  let nav = await utilities.getNav();
+  let content = await utilities.buildAddInventoryForm();
+  res.render("./inventory/delete-inventory", {
+    title: "Delete Existing Vehicle From Inventory",
+    nav,
+    content,
+  });
+};
+
 module.exports = managementController;

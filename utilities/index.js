@@ -83,7 +83,6 @@ Util.buildClassificationGrid = async function (data) {
 Util.buildDetailView = async function (data) {
   let miles = data.inv_miles;
   let formattedMiles = new Intl.NumberFormat("en-US").format(miles);
-  // TODO:
   return `<div class="detailViewContainer">
   <img class="detailsImg" src="${data.inv_img}" alt="Image of ${
     data.inv_make
@@ -98,7 +97,6 @@ Util.buildDetailView = async function (data) {
   <p><span class="bold">Miles: </span> ${formattedMiles} </p>
   </div>
   </div>`;
-  // <pre>${JSON.stringify(data, undefined, 2)}</pre>;
 };
 
 /* ****************************************
@@ -223,6 +221,29 @@ Util.buildAddInventoryForm = async (classification_id) => {
     <label for="inv_color">Color</label>
     <input type="text" id="inv_color" name="inv_color" required />
     <button type="submit" id="addInventoryBtn" name="addInventoryBtn">ADD VEHICLE</button>
+  </form>
+  </div>`;
+};
+
+Util.buildDeleteInventoryForm = async (classification_id) => {
+  const selectList = await Util.buildClassificationList(classification_id);
+  return `
+  <div class="add-inventory-form-container">
+  <p>All Fields are Required</p>
+  <form method="POST" action="/inv/delete-inventory">
+    <label for="classificationList">Classification Name</label>
+    ${selectList}
+    <label for="inv_make">Make</label>
+    <input type="text" id="inv_make" name="inv_make" pattern=".{3,}" placeholder="Min of 3 characters" readonly required />
+    <label for="inv_model">Model</label>
+    <input type="text" id="inv_model" name="inv_model" pattern=".{3,}" placeholder="Min of 3 characters" readonly required />
+vehicles/no-image.png" pattern="^/images/[A-Za-z0-9/_-]+\.(png|jpg|jpeg|gif|webp)$" required />
+    <label for="inv_price">Price</label>
+    <input type="text" id="inv_price" name="inv_price" placeholder="Decimal or Integer" readonly required />
+    <label for="inv_year">Year</label>
+    <input type="text" id="inv_year" name="inv_year" pattern="^\d{4}$" placeholder="4-digit year" readonly required />
+    <p>Confirm Deletion - The delete is permanent.</p>
+   <button type="submit" id="deleteInventoryBtn" name="deleteInventoryBtn">DELETE VEHICLE</button>
   </form>
   </div>`;
 };

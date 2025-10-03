@@ -90,6 +90,18 @@ async function addInventory(
   }
 }
 
+async function deleteInventory(inv_id) {
+  try {
+    const data = await pool.query(
+      `DELETE FROM public.inventory WHERE inv_id = $1`,
+      [inv_id]
+    );
+    return data;
+  } catch (error) {
+    console.error("deleteInventory error " + error);
+  }
+}
+
 module.exports = {
   getClassifications,
   addClassification,
