@@ -12,10 +12,12 @@ const accountController = {};
 
 async function buildLogin(req, res, next) {
   let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
   const content = utilities.buildLoginForm();
   res.render("account/login", {
     title: "Login",
     nav,
+    accountData,
     content,
   });
 }
@@ -26,6 +28,7 @@ async function buildLogin(req, res, next) {
 
 async function buildRegistration(req, res, next) {
   let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
   const {
     account_firstname = "",
     account_lastname = "",
@@ -43,6 +46,7 @@ async function buildRegistration(req, res, next) {
   res.render("account/register", {
     title: "Register",
     nav,
+    accountData,
     content,
     errors: null,
   });
@@ -55,6 +59,7 @@ async function registerAccount(req, res) {
   console.log("### Account Controller - registerAccount");
 
   let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
   const {
     account_firstname,
     account_lastname,
@@ -83,6 +88,7 @@ async function registerAccount(req, res) {
     res.status(500).render("account/register", {
       title: "Registration",
       nav,
+      accountData,
       content: registerContent,
       errors: null,
     });
@@ -107,6 +113,7 @@ async function registerAccount(req, res) {
     res.status(201).render("account/login", {
       title: "Login",
       nav,
+      accountData,
       content: loginContent,
     });
   } else {
@@ -116,6 +123,7 @@ async function registerAccount(req, res) {
     res.status(500).render("account/register", {
       title: "Registration",
       nav,
+      accountData,
       content: registerContent,
       errors: null,
     });
@@ -158,7 +166,12 @@ async function accountLogin(req, res) {
           maxAge: 3600 * 1000,
         });
       }
-      return res.redirect("/account/");
+      res.status(200).render("account/manage", {
+        title: "Account Management",
+        nav,
+        accountData,
+        content: utilities.buildAccountManagement(accountData),
+      });
     } else {
       req.flash(
         "message notice",
@@ -167,6 +180,7 @@ async function accountLogin(req, res) {
       res.status(400).render("account/login", {
         title: "Login",
         nav,
+        accountData: null,
         errors: null,
         account_email,
         content,
@@ -177,9 +191,22 @@ async function accountLogin(req, res) {
   }
 }
 
+async function buildAccountManagement(req, res, next) {
+  let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
+  const content = utilities.buildAccountManagement(accountData);
+  res.render("account/manage", {
+    title: "Manage Account",
+    nav,
+    accountData,
+    content,
+  });
+}
+
 module.exports = {
   buildLogin,
   buildRegistration,
   registerAccount,
   accountLogin,
+  buildAccountManagement,
 };

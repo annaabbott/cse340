@@ -114,7 +114,7 @@ Util.buildLoginForm = (account_firstname) => {
     account_firstname || ""
   }"/>
   <label for="account_password">Password</label>
-  <input type="password" id="account_password" name="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required />
+  <input type="password" id="account_password" name="account_password" required />
   <p class="password-requirements">Passwords must be at least 12 characters and contain at least 1 capital letter, at least 1 number, and at least 1 special character</p>
   <button type="submit" id="loginBtn" name="loginBtn">LOGIN</button>
   <p>No account? <a href="/account/register">Sign up</a></p>
@@ -271,6 +271,12 @@ Util.checkJWTToken = (req, res, next) => {
   }
 };
 
+Util.getAccountData = function (res) {
+  const accountData = res.locals.accountData ?? null;
+  console.log("Account Data: ", accountData);
+  return accountData;
+};
+
 /* ****************************************
  *  Check Login
  * ************************************ */
@@ -282,6 +288,24 @@ Util.checkLogin = (req, res, next) => {
     req.flash("notice", "Please log in");
     return res.redirect("/account/login");
   }
+};
+
+Util.buildAccountManagement = (accountData) => {
+  let content = `
+    <h2>Welcome, ${accountData.account_firstname}</h2>
+    <p>You're logged in.</p>
+    <a href="/account/edit">Edit Account Information</a>`;
+
+  if (
+    accountData.account_type == "employee" ||
+    accountData.account_type == "admin"
+  ) {
+    content += `
+      <h3>Inventory Management</h3>
+      <a href="/inv/management">Manage Inventory</a>`;
+  }
+
+  return content;
 };
 
 module.exports = Util;

@@ -11,10 +11,12 @@ invCont.buildByClassificationId = async function (req, res, next) {
   const data = await invModel.getInventoryByClassificationId(classification_id);
   const grid = await utilities.buildClassificationGrid(data);
   let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
   const className = data[0].classification_name;
   res.render("./inventory/classification", {
     title: className + " vehicles",
     nav,
+    accountData,
     grid,
   });
 };
@@ -24,11 +26,12 @@ invCont.buildByInvId = async function (req, res, next) {
   const data = await invModel.getInventoryByInvId(product_id); // 👈👈👈
   const content = await utilities.buildDetailView(data);
   let nav = await utilities.getNav();
-  //const className = data[0].classification_name;
+  const accountData = utilities.getAccountData(res);
   const vehicleMakeModel = `${data.inv_make} ${data.inv_model}`;
   res.render("./inventory/detail", {
     title: vehicleMakeModel,
     nav,
+    accountData,
     content,
   });
 };

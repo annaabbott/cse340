@@ -4,21 +4,25 @@ const managementController = {};
 
 managementController.buildManagement = async function (req, res) {
   let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
   let content = utilities.buildManagement();
   //   req.flash("notice", "This is a flash message.");
   res.render("./inventory/management", {
     title: "Vehicle Management",
     nav,
+    accountData,
     content,
   });
 };
 
 managementController.addClassification = async function (req, res) {
   let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
   let content = utilities.buildAddClassificationForm();
   res.render("./inventory/add-classification", {
     title: "Add New Classification",
     nav,
+    accountData,
     content,
   });
 };
@@ -35,20 +39,24 @@ managementController.addClassificationPostback = async function (req, res) {
     );
   }
   let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
   let content = utilities.buildAddClassificationForm();
   res.render("./inventory/add-classification", {
     title: "Add New Classification",
     nav,
+    accountData,
     content,
   });
 };
 
 managementController.addInventory = async function (req, res) {
   let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
   let content = await utilities.buildAddInventoryForm();
   res.render("./inventory/add-inventory", {
     title: "Add New Vehicle",
     nav,
+    accountData,
     content,
   });
 };
@@ -88,20 +96,24 @@ managementController.addInventoryPostback = async function (req, res) {
   }
 
   let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
   let content = await utilities.buildAddInventoryForm();
   res.render("./inventory/add-inventory", {
     title: "Add New Vehicle",
     nav,
+    accountData,
     content,
   });
 };
 
 managementController.deleteInventory = async function (req, res) {
   let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
   let content = await utilities.buildDeleteInventoryForm();
   res.render("./inventory/delete-inventory", {
     title: "Delete Existing Vehicle From Inventory",
     nav,
+    accountData,
     content,
   });
 };
@@ -143,10 +155,12 @@ managementController.deleteInventoryPostback = async function (req, res) {
   }
 
   let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
   let content = await utilities.buildAddInventoryForm();
   res.render("./inventory/delete-inventory", {
     title: "Delete Existing Vehicle From Inventory",
     nav,
+    accountData,
     content,
   });
 };

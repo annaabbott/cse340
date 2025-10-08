@@ -32,7 +32,7 @@ router.post(
 
 //default route upon login
 router.get(
-  "/",
+  "/manage",
   utilities.checkLogin,
   utilities.handleErrors(accountController.buildAccountManagement)
 );

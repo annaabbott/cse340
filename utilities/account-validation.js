@@ -66,6 +66,7 @@ validate.checkRegData = async (req, res, next) => {
   errors = validationResult(req);
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav();
+    const accountData = utilities.getAccountData(res);
     let content = utilities.buildRegistrationForm(
       account_firstname,
       account_lastname,
@@ -75,6 +76,7 @@ validate.checkRegData = async (req, res, next) => {
       errors,
       title: "Registration",
       nav,
+      accountData,
       content,
     });
     return;
@@ -137,10 +139,12 @@ validate.checkLoginData = async (req, res, next) => {
   errors = validationResult(req);
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav();
+    const accountData = utilities.getAccountData(res);
     res.render("account/register", {
       errors,
       title: "Registration",
       nav,
+      accountData,
       account_email,
     });
     return;
