@@ -308,4 +308,24 @@ Util.buildAccountManagement = (accountData) => {
   return content;
 };
 
+Util.buildEditAccount = (accountData) => {
+  return `<form class="accountUpdateForm" method="POST" action="/account/edit">
+  <label for="account_firstname">First Name</label>
+  <input type="text" id="account_firstname" name="account_firstname" required value="${accountData.account_firstname}"/>
+  <label for="account_lastname">Last Name</label>
+  <input type="text" id="account_lastname" name="account_lastname" required value="${accountData.account_lastname}"/>
+  <label for="account_email">Email</label>
+  <input type="email" id="account_email" name="account_email" required value="${accountData.account_email}"/>
+  <input type="hidden" id="account_id" name="account_id" value="${accountData.account_id}"/>
+  <button type="submit" id="updateBtn" name="updateBtn">UPDATE</button>
+  </form>
+  <form class="updatePasswordForm" method="POST" action="/account/edit-password">
+  <label for="account_password">New Password</label>
+  <input type="password" id="account_password" name="account_password" required />
+  <p>Passwords must be at least 12 characters and contain at least 1 capital letter, at least 1 number, and at least 1 special character</p>
+  <input type="hidden" id="account_id" name="account_id" value="${accountData.account_id}"/>
+  <button type="submit" id="updatePasswordBtn" name="updatePasswordBtn">CHANGE PASSWORD</button>;
+  </form>`;
+};
+
 module.exports = Util;

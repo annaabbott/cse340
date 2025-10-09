@@ -37,4 +37,15 @@ router.get(
   utilities.handleErrors(accountController.buildAccountManagement)
 );
 
+// Process account update
+
+router.get("/edit", utilities.handleErrors(accountController.buildEditAccount));
+
+router.post(
+  "/edit",
+  regValidate.updateRegistrationRules(),
+  regValidate.checkUpdateData,
+  utilities.handleErrors(accountController.updateAccount)
+);
+
 module.exports = router;

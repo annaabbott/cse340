@@ -53,7 +53,7 @@ async function buildRegistration(req, res, next) {
 }
 
 /* ****************************************
- *  Process Registration
+ *  Process Registration Request
  * *************************************** */
 async function registerAccount(req, res) {
   console.log("### Account Controller - registerAccount");
@@ -191,6 +191,10 @@ async function accountLogin(req, res) {
   }
 }
 
+/* ****************************************
+ *  Deliver account management view
+ * *************************************** */
+
 async function buildAccountManagement(req, res, next) {
   let nav = await utilities.getNav();
   const accountData = utilities.getAccountData(res);
@@ -203,10 +207,149 @@ async function buildAccountManagement(req, res, next) {
   });
 }
 
+/* ****************************************
+ *  Deliver update account view
+ * *************************************** */
+
+async function buildEditAccount(req, res, next) {
+  let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
+  const content = utilities.buildEditAccount(accountData);
+  res.render("account/edit", {
+    title: "Edit Account",
+    nav,
+    accountData,
+    content,
+  });
+}
+
+/* ****************************************
+ *  Process Update Request
+ * *************************************** */
+async function updateAccount(req, res) {
+  console.log("### Account Controller - updateAccount");
+
+  let nav = await utilities.getNav();
+  let accountData = utilities.getAccountData(res);
+
+  const { account_id, account_firstname, account_lastname, account_email } =
+    req.body;
+
+  try {
+    const results = await accountModel.updateAccount(
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email
+    );
+
+    accountData = results.rows[0];
+    console.log("### Account Controller - accountData", accountData);
+    const content = utilities.buildEditAccount(accountData);
+
+    req.flash(
+      "notice",
+      `Congratulations, your account has been updated, ${account_firstname}.`
+    );
+
+    res.status(200).render("account/edit", {
+      title: "Edit Account",
+      nav,
+      accountData,
+      content,
+    });
+  } catch (error) {
+    console.log("### Account Controller - error updating account info", error);
+
+    req.flash(
+      "notice",
+      "Sorry, there was an error updating your account info."
+    );
+
+    res.render("account/edit", {
+      title: "Edit Account",
+      nav,
+      accountData,
+      content,
+    });
+
+    return;
+  }
+}
+
+/* ****************************************
+ *  Process Change password Request
+ * *************************************** */
+async function changePassword(req, res) {
+  console.log("### Account Controller - changePassword");
+
+  let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
+  const {
+    account_firstname,
+    account_lastname,
+    account_email,
+    account_password,
+    account_id,
+  } = req.body;
+
+  const registerContent = utilities.buildEditAccount(
+    account_firstname,
+    account_lastname,
+    account_email,
+    account_id
+  );
+  let hashedPassword;
+  try {
+    //regular password and cost (salt is generated automatically)
+    hashedPassword = await bcrypt.hashSync(account_password, 10);
+  } catch (error) {
+    console.log("### Account Controller - error hashing password", error);
+    req.flash("notice", "Sorry, there was an error changing your password.");
+    res.status(500).render("account/edit", {
+      title: "Edit Account",
+      nav,
+      accountData,
+      content: registerContent,
+      errors: null,
+    });
+    return;
+  }
+  const regResult = await accountModel.updateAccount(
+    account_firstname,
+    account_lastname,
+    account_email,
+    hashedPassword
+  );
+  if (regResult) {
+    console.log("### Account Controller - successful password change");
+    req.flash("notice", `Congratulations, your password has been changed.`);
+    res.status(201).render("account/edit", {
+      title: "Edit Account",
+      nav,
+      accountData,
+      content: registerContent,
+      errors: null,
+    });
+  } else {
+    console.log("### Account Controller - password change failed");
+    req.flash("notice", "Sorry, the password change failed.");
+    res.status(500).render("account/edit", {
+      title: "Edit Account",
+      nav,
+      accountData,
+      content: registerContent,
+      errors: null,
+    });
+  }
+}
+
 module.exports = {
   buildLogin,
   buildRegistration,
   registerAccount,
   accountLogin,
   buildAccountManagement,
+  buildEditAccount,
+  updateAccount,
 };
