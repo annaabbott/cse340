@@ -5,6 +5,7 @@ const invController = require("../utilities/index");
 const accountController = require("../controllers/accountController");
 const utilities = require("../utilities");
 const regValidate = require("../utilities/account-validation.js");
+const baseController = require("../controllers/baseController.js"); // to use buildHome function
 
 //Route for 'my account' view
 router.get("/login", utilities.handleErrors(accountController.buildLogin));
@@ -35,6 +36,15 @@ router.get(
   "/manage",
   utilities.checkLogin,
   utilities.handleErrors(accountController.buildAccountManagement)
+);
+
+//route for log out
+router.get(
+  "/logout",
+  utilities.handleErrors((req, res) => {
+    res.clearCookie("jwt");
+    return res.redirect("/");
+  })
 );
 
 // Process account update

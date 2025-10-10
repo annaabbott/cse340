@@ -309,7 +309,7 @@ Util.buildAccountManagement = (accountData) => {
 };
 
 Util.buildEditAccount = (accountData) => {
-  return `<form class="accountUpdateForm" method="POST" action="/account/edit">
+  return `<form class="editAccountForm" method="POST" action="/account/edit">
   <label for="account_firstname">First Name</label>
   <input type="text" id="account_firstname" name="account_firstname" required value="${accountData.account_firstname}"/>
   <label for="account_lastname">Last Name</label>

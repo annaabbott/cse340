@@ -191,6 +191,15 @@ async function accountLogin(req, res) {
   }
 }
 
+// /* ****************************************
+//  *  Process log out request
+//  * ************************************ */
+
+// async function accountLogout(req, res) {
+//   let nav = await utilities.getNav();
+
+// }
+
 /* ****************************************
  *  Deliver account management view
  * *************************************** */
