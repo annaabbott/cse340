@@ -62,8 +62,6 @@ managementController.deleteClassification = async function (req, res) {
 };
 
 managementController.deleteClassificationPostback = async function (req, res) {
-  console.log("$$$$$$ Hello World");
-  console.log("$$$$ req.body: ", req.body);
   const { classRemove, classMigrate } = req.body;
   if (classRemove === classMigrate) {
     req.flash(
