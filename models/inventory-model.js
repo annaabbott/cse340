@@ -11,6 +11,45 @@ async function getClassifications() {
 }
 
 /* ***************************
+ * Migrate classification data
+ * ************************** */
+
+async function migrateInventory(oldClassificationId, newClassificationId) {
+  try {
+    const data = `
+      UPDATE inventory
+      SET 
+        classification_id = $1
+      WHERE classification_id = $2
+  `;
+    const result = await pool.query(data, [
+      newClassificationId,
+      oldClassificationId,
+    ]);
+    console.log(
+      `${result.rowCount} items migrated from ${oldClassificationId} to ${newClassificationId}`
+    );
+  } catch (error) {
+    console.error("Inventory migration error: " + error);
+  }
+}
+
+/* ***************************
+ * Delete classification data
+ * ************************** */
+async function deleteClassification(classificationId) {
+  try {
+    const data = `
+    DELETE FROM classification 
+    WHERE classification_id = $1;
+    `;
+    await pool.query(data, [classificationId]);
+  } catch (error) {
+    console.error("Unable to delete inventory classification: " + error);
+  }
+}
+
+/* ***************************
  *  Get all inventory items and classification_name by classification_id
  * ************************** */
 async function getInventoryByClassificationId(classification_id) {
@@ -108,4 +147,6 @@ module.exports = {
   addInventory,
   getInventoryByClassificationId,
   getInventoryByInvId,
+  migrateInventory,
+  deleteClassification,
 };

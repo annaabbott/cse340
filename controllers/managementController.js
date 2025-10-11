@@ -49,6 +49,45 @@ managementController.addClassificationPostback = async function (req, res) {
   });
 };
 
+managementController.deleteClassification = async function (req, res) {
+  let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
+  let content = utilities.buildRemoveClassificationForm();
+  res.render("./inventory/delete-classification", {
+    title: "Delete Classification",
+    nav,
+    accountData,
+    content,
+  });
+};
+
+managementController.deleteClassificationPostback = async function (req, res) {
+  let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
+
+  const { classRemove, classMigrate } = req.body;
+  let content;
+  if (classRemove === classMigrate) {
+    req.flash(
+      "notice",
+      "Source and destination classifictions cannot be the same."
+    );
+  } else {
+    await invModel.migrateInventory(classRemove, classMigrate);
+    await invModel.deleteClassification(classRemove);
+
+    req.flash("notice", "Classification has been removed.");
+  }
+
+  content = await utilities.buildRemoveClassificationForm();
+  res.render("./inventory/delete-classification", {
+    title: "Delete Classification",
+    nav,
+    accountData,
+    content,
+  });
+};
+
 managementController.addInventory = async function (req, res) {
   let nav = await utilities.getNav();
   const accountData = utilities.getAccountData(res);
@@ -119,32 +158,8 @@ managementController.deleteInventory = async function (req, res) {
 };
 
 managementController.deleteInventoryPostback = async function (req, res) {
-  const {
-    inv_id,
-    // classification_id,
-    // inv_make,
-    // inv_model,
-    // inv_description,
-    // inv_image,
-    // inv_thumbnail,
-    // inv_price,
-    // inv_year,
-    // inv_miles,
-    // inv_color,
-  } = req.body;
-  const success = await invModel.deleteInventory(
-    inv_id
-    // classification_id,
-    // inv_make,
-    // inv_model,
-    // inv_description,
-    // inv_image,
-    // inv_thumbnail,
-    // inv_price,
-    // inv_year,
-    // inv_miles,
-    // inv_color
-  );
+  const { inv_id } = req.body;
+  const success = await invModel.deleteInventory(inv_id);
   if (success) {
     req.flash("notice", `Vehicle has been deleted from the inventory.`);
   } else {

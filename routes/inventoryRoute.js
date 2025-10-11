@@ -33,6 +33,17 @@ router.post(
   utilities.handleErrors(managementController.addClassificationPostback)
 );
 
+//management add classification route
+router.get(
+  "/delete-classification",
+  utilities.handleErrors(managementController.deleteClassification)
+);
+
+router.post(
+  "/delete-classification",
+  utilities.handleErrors(managementController.deleteClassificationPostback)
+);
+
 //management add inventory route
 router.get(
   "/add-inventory",

@@ -175,6 +175,31 @@ Util.buildAddClassificationForm = () => {
     </div>`;
 };
 
+Util.buildRemoveClassificationForm = async (classification_id) => {
+  const selectList1 = await Util.buildClassificationList2(
+    "classRemove",
+    "classRemove"
+  );
+  const selectList2 = await Util.buildClassificationList2(
+    "classMigrate",
+    "classMigrate"
+  );
+  return `
+  <div class="removeClassificationFormContainer">
+  
+  <form method="POST" action="/inv/remove-classification">
+    <p>Select a Classification to Remove</p>
+    <label for="classRemove">Classification Name</label>
+    ${selectList1}
+    <p>Migrate all data into classification:</p>
+    ${selectList2}
+    <p>Warning! All data in the selected first classification will be merged into the selected second classification.</p>
+    <button type="submit" id="migrateDataBtn" name="migrateDataBtn">CONTINUE</button>
+  </form>
+  </div>
+  `;
+};
+
 Util.buildClassificationList = async function (classification_id = null) {
   let data = await invModel.getClassifications();
   let classificationList =
@@ -189,6 +214,16 @@ Util.buildClassificationList = async function (classification_id = null) {
       classificationList += " selected ";
     }
     classificationList += ">" + row.classification_name + "</option>";
+  });
+  classificationList += "</select>";
+  return classificationList;
+};
+
+Util.buildClassificationList2 = async function (name, id) {
+  let data = await invModel.getClassifications();
+  let classificationList = `<select name="${name}" id="${id}" required>`;
+  data.rows.forEach((row) => {
+    classificationList += `<option value="${row.classification_id}">${row.classification_name}</option>`;
   });
   classificationList += "</select>";
   return classificationList;
