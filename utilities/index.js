@@ -200,7 +200,7 @@ Util.buildRemoveClassificationForm = async (classification_id) => {
     ${selectList1}
     <p>Migrate all data into classification:</p>
     ${selectList2}
-    <p>Warning! All data in the selected first classification will be merged into the selected second classification.</p>
+    <p>Warning! All data in the selected first classification will be merged into the selected second classification, and the first classification will be deleted.</p>
     <button type="submit" id="migrateDataBtn" name="migrateDataBtn">CONTINUE</button>
   </form>
   </div>
