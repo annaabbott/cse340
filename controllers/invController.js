@@ -12,7 +12,16 @@ invCont.buildByClassificationId = async function (req, res, next) {
   const grid = await utilities.buildClassificationGrid(data);
   let nav = await utilities.getNav();
   const accountData = utilities.getAccountData(res);
-  const className = data[0].classification_name;
+  const allClassifications = await invModel.getClassifications();
+
+  const id = parseInt(classification_id);
+  const classification = allClassifications.rows.find(
+    (c) => c.classification_id === id
+  );
+
+  const className = classification
+    ? classification.classification_name
+    : "Not found";
   res.render("./inventory/classification", {
     title: className + " vehicles",
     nav,

@@ -52,7 +52,7 @@ managementController.addClassificationPostback = async function (req, res) {
 managementController.deleteClassification = async function (req, res) {
   let nav = await utilities.getNav();
   const accountData = utilities.getAccountData(res);
-  let content = utilities.buildRemoveClassificationForm();
+  let content = await utilities.buildRemoveClassificationForm();
   res.render("./inventory/delete-classification", {
     title: "Delete Classification",
     nav,
@@ -62,11 +62,9 @@ managementController.deleteClassification = async function (req, res) {
 };
 
 managementController.deleteClassificationPostback = async function (req, res) {
-  let nav = await utilities.getNav();
-  const accountData = utilities.getAccountData(res);
-
+  console.log("$$$$$$ Hello World");
+  console.log("$$$$ req.body: ", req.body);
   const { classRemove, classMigrate } = req.body;
-  let content;
   if (classRemove === classMigrate) {
     req.flash(
       "notice",
@@ -79,7 +77,10 @@ managementController.deleteClassificationPostback = async function (req, res) {
     req.flash("notice", "Classification has been removed.");
   }
 
-  content = await utilities.buildRemoveClassificationForm();
+  let content = await utilities.buildRemoveClassificationForm();
+  let nav = await utilities.getNav();
+  const accountData = utilities.getAccountData(res);
+
   res.render("./inventory/delete-classification", {
     title: "Delete Classification",
     nav,

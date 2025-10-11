@@ -31,7 +31,7 @@ Util.getNav = async function (req, res, next) {
  * Build the classification view HTML
  * ************************************ */
 Util.buildClassificationGrid = async function (data) {
-  let grid;
+  let grid = "";
   if (data.length > 0) {
     grid = '<ul id="inv-display">';
     data.forEach((vehicle) => {
@@ -143,18 +143,25 @@ Util.buildRegistrationForm = (
 
 Util.buildManagement = () => {
   return `
-    
     <p>
-      <a 
-        href="/inv/add-classification" 
+      <a
+        href="/inv/add-classification"
         title="Add New Classification"
       >
         Add Classification
       </a>
     </p>
-    <p> 
-      <a 
-        href="/inv/add-inventory" 
+    <p>
+      <a
+        href="/inv/delete-classification"
+        title="Remove Classification"
+      >
+        Migrate Data and Remove Classification
+      </a>
+    </p>
+    <p>
+      <a
+        href="/inv/add-inventory"
         title="Add Vehicle"
       >
         Add New Vehicle
@@ -187,7 +194,7 @@ Util.buildRemoveClassificationForm = async (classification_id) => {
   return `
   <div class="removeClassificationFormContainer">
   
-  <form method="POST" action="/inv/remove-classification">
+  <form method="POST" action="/inv/delete-classification">
     <p>Select a Classification to Remove</p>
     <label for="classRemove">Classification Name</label>
     ${selectList1}
